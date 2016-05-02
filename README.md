@@ -7,10 +7,10 @@ This project builds a Docker image with the latest master build of Grafana.
 Start your container binding the external port `3000`.
 
 ```
-docker run -d --name=grafana -p 3000:3000 grafana/grafana
+docker run -d --name=grafana -p 3000:3000 appcelerator/grafana
 ```
 
-Try it out, default admin user is admin/admin.
+Try it out, default admin user is admin/changeme.
 
 ## Configuring your Grafana container
 
@@ -22,9 +22,11 @@ docker run \
   -d \
   -p 3000:3000 \
   --name=grafana \
-  -e "GF_SERVER_ROOT_URL=http://grafana.server.name" \
-  -e "GF_SECURITY_ADMIN_PASSWORD=secret" \
-  grafana/grafana
+  -e "GRAFANA_PASS=changeme" \
+  -e "INFLUXDB_HOST=influxdb" \
+  -e "INFLUXDB_USER=grafana" \
+  -e "INFLUXDB_PASS=changeme" \
+  appcelerator/grafana
 ```
 
 ## Grafana container with persistent storage (recommended)
@@ -39,7 +41,7 @@ docker run \
   -p 3000:3000 \
   --name=grafana \
   --volumes-from grafana-storage \
-  grafana/grafana
+  appcelerator/grafana
 ```
 
 ## Running specific version of Grafana
@@ -50,7 +52,7 @@ docker run \
   -d \
   -p 3000:3000 \
   --name grafana \
-  grafana/grafana:2.6.0
+  appcelerator/grafana:2.6.0
 ```
 
 ## Official Grafana with unofficial plugins (community project):
