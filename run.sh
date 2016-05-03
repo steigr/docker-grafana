@@ -41,7 +41,7 @@ wait_for_start_of_grafana
 
 if [ ! -f /.ds_is_configured ]; then
     echo "configure datasources..."
-    curl 'http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3000/api/datasources' -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary @/etc/grafana/config-influxdb.js
+    curl "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3000/api/datasources" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary @/etc/grafana/config-influxdb.js
     touch /.ds_is_configured
 fi
 
