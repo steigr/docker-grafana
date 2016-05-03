@@ -13,8 +13,7 @@ ENV GRAFANA_VERSION 2.6.0
 
 ADD package.json /tmp/package.json
 
-RUN apk --no-cache add go && \
-    apk --virtual build-deps add curl git gcc musl-dev make nodejs-dev && \
+RUN apk --virtual build-deps add go curl git gcc musl-dev make nodejs-dev && \
     export GOPATH=/go && \
     go get -d github.com/grafana/grafana/... && \
     cd $GOPATH/src/github.com/grafana/grafana && \
