@@ -1,7 +1,16 @@
 #!/bin/sh
 
 GRAFANA_BIN=/bin/grafana-server
-envtpl /etc/grafana/config-influxdb.js.tpl
+
+for f in $(ls /etc/grafana/config-*.js); do
+    # look for jinja templates, and convert them
+    grep -q "{{ " "$f"
+    if [[ $? -eq 0 ]]; then
+        echo "converting $f"
+        mv "$f" "$f.tpl"
+        envtpl "$f.tpl"
+    fi
+done
 envtpl /usr/share/grafana/conf/defaults.ini.tpl
 
 : "${GF_PATHS_DATA:=/var/lib/grafana}"
@@ -19,6 +28,7 @@ API_URL="http://127.0.0.1:3001"
 wait_for_start_of_grafana(){
     #wait for the startup of grafana
     local retry=0
+    echo "waiting for availability of grafana..."
     while ! curl ${API_URL} 2>/dev/null; do
         retry=$((retry+1))
         if [ $retry -gt 15 ]; then
@@ -45,7 +55,17 @@ if [ ! -f /.ds_is_configured ]; then
     wait_for_start_of_grafana
 
     echo "configure datasources..."
-    curl "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/api/datasources" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary @/etc/grafana/config-influxdb.js
+    for f in $(ls /etc/grafana/config-datasource*.js 2>/dev/null); do
+        echo "datasource $f"
+        curl "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/api/datasources" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
+    done
+
+    echo
+    echo "configure dashboards..."
+    for f in $(ls /etc/grafana/config-dashboard*.js 2>/dev/null); do
+        echo "dashboard $f"
+        curl "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/api/dashboards/db" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
+    done
     touch /.ds_is_configured
     echo
     echo "Restarting grafana..."

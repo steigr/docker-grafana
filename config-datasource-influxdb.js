@@ -1,5 +1,5 @@
 {
-    "name":"influx",
+    "name":"telegraf",
     "type":"influxdb",
     "url":"{{ INFLUXDB_PROTO | default("http") }}://{{ INFLUXDB_HOST | default("localhost") }}:{{ INFLUXDB_PORT | default("8086") }}",
     "access":"{{ INFLUXDB_ACCESS | default("proxy") }}",

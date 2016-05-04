@@ -49,7 +49,7 @@ ENV GRAFANA_USER admin
 ENV GRAFANA_PASS changeme
 
 COPY ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
-COPY ./config-influxdb.js /etc/grafana/config-influxdb.js.tpl
+COPY ./config-*.js /etc/grafana/
 COPY ./run.sh /run.sh
 
 CMD ["/run.sh"]
