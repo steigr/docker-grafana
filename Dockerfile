@@ -1,33 +1,36 @@
 FROM alpine:3.3
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
-RUN apk --no-cache add python && \
+RUN apk update && \
+    apk --no-cache add python ca-certificates && \
     apk --virtual envtpl-deps add --update py-pip python-dev curl && \
     curl https://bootstrap.pypa.io/ez_setup.py | python && \
     pip install envtpl && \
-    apk del envtpl-deps
+    apk del envtpl-deps && rm -rf /var/cache/apk/*
 
 RUN apk --no-cache add nodejs
 
-ENV GRAFANA_VERSION 2.6.0
+ENV GRAFANA_VERSION 3.0.2
 
 ADD package.json /tmp/package.json
 
-RUN apk --virtual build-deps add go curl git gcc musl-dev make nodejs-dev && \
+RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    echo "http://nl.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    apk update && apk upgrade && \
+    apk --virtual build-deps add build-base go curl git gcc musl-dev make nodejs-dev && \
     export GOPATH=/go && \
-    go get -d github.com/grafana/grafana/... && \
-    cd $GOPATH/src/github.com/grafana/grafana && \
-    git checkout -q --detach "v${GRAFANA_VERSION}" && \
-    mv /tmp/package.json $GOPATH/src/github.com/grafana/grafana/ && \
+    mkdir -p $GOPATH/src/github.com/grafana && cd $GOPATH/src/github.com/grafana && \
+    git clone https://github.com/grafana/grafana.git -b v${GRAFANA_VERSION} &&\
+    cd grafana && \
     go run build.go setup && \
     $GOPATH/bin/godep restore && \
     go run build.go build && \
     npm install && \
+    npm run build && \
     npm install -g grunt-cli && \
     grunt && \
     npm uninstall -g grunt-cli && \
     npm cache clear && \
-    #curl -L https://github.com/tianon/gosu/releases/download/1.7/gosu-amd64 > /bin/gosu && chmod +x /bin/gosu && \
     mv ./bin/grafana-server /bin/ && \
     mkdir -p /etc/grafana /var/lib/grafana/plugins /var/log/grafana /usr/share/grafana && \
     mv ./public_gen /usr/share/grafana/public && \
@@ -54,6 +57,7 @@ COPY ./run.sh /run.sh
 
 CMD ["/run.sh"]
 
+LABEL axway_image=grafana
 # will be updated whenever there's a new commit
 LABEL commit=${GIT_COMMIT}
 LABEL branch=${GIT_BRANCH}

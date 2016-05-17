@@ -97,15 +97,15 @@
                   "type": "tag"
                 },
                 {
-                  "key": "cont_name",
+                  "key": "container_name",
                   "params": [
-                    "cont_name"
+                    "container_name"
                   ],
                   "type": "tag"
                 }
               ],
-              "measurement": "docker_cpu",
-              "query": "SELECT mean(\"usage_percent\") FROM \"docker_mem\" WHERE $timeFilter GROUP BY time($interval), \"cont_name\", \"datacenter\", \"host\"",
+              "measurement": "docker_container_mem",
+              "query": "SELECT mean(\"usage_percent\") FROM \"docker_container_mem\" WHERE $timeFilter GROUP BY time($interval), \"container_name\", \"datacenter\", \"host\"",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -214,15 +214,15 @@
                   "type": "tag"
                 },
                 {
-                  "key": "cont_name",
+                  "key": "container_name",
                   "params": [
-                    "cont_name"
+                    "container_name"
                   ],
                   "type": "tag"
                 }
               ],
-              "measurement": "docker_cpu",
-              "query": "SELECT mean(\"usage_percent\") FROM \"docker_cpu\" WHERE $timeFilter GROUP BY time($interval), \"datacenter\", \"host\", \"cont_name\"",
+              "measurement": "docker_container_cpu",
+              "query": "SELECT mean(\"usage_percent\") FROM \"docker_container_cpu\" WHERE $timeFilter GROUP BY time($interval), \"datacenter\", \"host\", \"container_name\"",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
