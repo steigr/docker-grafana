@@ -47,31 +47,16 @@ docker run \
 ## Running specific version of Grafana
 
 ```
-# specify right tag, e.g. 2.6.0 - see Docker Hub for available tags
+# specify right tag, e.g. 3.0.2 - see Docker Hub for available tags
 docker run \
   -d \
   -p 3000:3000 \
   --name grafana \
-  appcelerator/grafana:2.6.0
+  appcelerator/grafana:3.0.2
 ```
 
-## Official Grafana with unofficial plugins (community project):
+# Dashboard and datasources
 
-Unofficial plugins/datasources: Zabbix, DalmatinerDB, Ambari, Atsd, Bosun,
-Cloudera Manager, Druid, Chnocchi, PRTG, ...
+mount dashboards in /etc/grafana/config-dashboard*.js and datasources in /etc/grafana/config-datasource*.js, they will be loaded at container start.
 
-```
-# create /var/lib/grafana as persistent volume storage
-docker run -d -v /var/lib/grafana --name grafana-xxl-storage busybox:latest
-
-# start grafana-xxl
-docker run \
-  -d \
-  -p 3000:3000 \
-  --name grafana-xxl \
-  --volumes-from grafana-xxl-storage \
-  monitoringartist/grafana-xxl
-```
-
-Visit [Grafana XXL project](https://github.com/monitoringartist/grafana-xxl)
-for more details.
+Default ones are already loaded.
