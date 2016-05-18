@@ -57,10 +57,11 @@ docker run \
 
 # Dashboard and datasources
 
-mount dashboards in /etc/grafana/config-dashboard*.js and datasources in /etc/grafana/config-datasource*.js, they will be loaded at container start.
+mount dashboards in /etc/grafana/json/config-dashboard*.js and datasources in /etc/grafana/json/config-datasource*.js, they will be loaded at container start.
 
-Default ones are already loaded.
+You can find samples in the github repository, to mount your own, put your config-*.js file in a $config folder and:
 
+```docker run -v $config:/etc/grafana/json:ro ...```
 
 Container pilot
 ---------------

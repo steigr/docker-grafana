@@ -30,7 +30,7 @@ RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &
     npm uninstall -g grunt-cli && \
     npm cache clear && \
     mv ./bin/grafana-server /bin/ && \
-    mkdir -p /etc/grafana /var/lib/grafana/plugins /var/log/grafana /usr/share/grafana && \
+    mkdir -p /etc/grafana/json /var/lib/grafana/plugins /var/log/grafana /usr/share/grafana && \
     mv ./public_gen /usr/share/grafana/public && \
     mv ./conf /usr/share/grafana/conf && \
     apk del build-deps && cd / && rm -rf /var/cache/apk/* $GOPATH
@@ -50,7 +50,6 @@ ENV GRAFANA_USER admin
 ENV GRAFANA_PASS changeme
 
 COPY ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
-COPY ./config-*.js /etc/grafana/
 COPY ./run.sh /run.sh
 
 # Add ContainerPilot

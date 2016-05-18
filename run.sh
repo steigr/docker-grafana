@@ -2,14 +2,19 @@
 
 GRAFANA_BIN=/bin/grafana-server
 
-for f in $(ls /etc/grafana/config-*.js); do
+should_configure=0
+for f in $(ls /etc/grafana/json/config-*.js); do
     # look for jinja templates, and convert them
     grep -q "{{ " "$f"
     if [[ $? -eq 0 ]]; then
         echo "converting $f"
-        mv "$f" "$f.tpl"
-        envtpl "$f.tpl"
+        cfg=/etc/grafana/$(basename $f)
+        cp "$f" "$cfg.tpl"
+        envtpl "$cfg.tpl"
+    else
+        cp "$f" /etc/grafana/
     fi
+    should_configure=1
 done
 envtpl /usr/share/grafana/conf/defaults.ini.tpl
 
@@ -41,7 +46,7 @@ wait_for_start_of_grafana(){
     echo
 }
 
-if [ ! -f /.ds_is_configured ]; then
+if [ $should_configure -eq 1 ]; then
     echo "Starting grafana for configuration"
     "$GRAFANA_BIN" \
       --homepath=/usr/share/grafana             \
@@ -71,7 +76,7 @@ if [ ! -f /.ds_is_configured ]; then
     echo "Restarting grafana..."
     killall "$(basename $GRAFANA_BIN)"
 else
-    echo "datasource is already configured, skip the configuration step"
+    echo "no datasource or dashboard json file, skip the configuration step"
 fi
 
 echo
