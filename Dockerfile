@@ -57,7 +57,9 @@ COPY ./run.sh /run.sh
 ENV CONTAINERPILOT=2.1.0
 RUN curl -Lo /tmp/cb.tar.gz https://github.com/joyent/containerpilot/releases/download/$CONTAINERPILOT/containerpilot-$CONTAINERPILOT.tar.gz \
 && tar -xz -f /tmp/cb.tar.gz \
-&& mv ./containerpilot /bin/
+&& mv ./containerpilot /bin/ \
+&& rm /tmp/cb.tar.gz
+
 COPY containerpilot.json /etc/containerpilot.json
 COPY ./start.sh /start.sh
 COPY ./stop.sh /stop.sh
