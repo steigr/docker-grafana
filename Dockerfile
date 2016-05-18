@@ -12,8 +12,6 @@ RUN apk --no-cache add nodejs
 
 ENV GRAFANA_VERSION 3.0.2
 
-ADD package.json /tmp/package.json
-
 RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     echo "http://nl.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     apk update && apk upgrade && \
