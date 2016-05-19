@@ -10,8 +10,8 @@
       "name": "grafana",
       "port": 3000,
       "health": "pidof grafana-server",
-      "poll": 10,
-      "ttl": 30
+      "poll": [poll],
+      "ttl": [ttl]
     }
   ],
   "backends": [
