@@ -1,4 +1,4 @@
-FROM appcelerator/alpine:3.3.1
+FROM appcelerator/alpine:3.3.2
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
 RUN apk --no-cache add nodejs
@@ -49,7 +49,7 @@ ENV CP_POLL=5
 ENV CP_SERVICE_NAME=grafana
 ENV CP_SERVICE_BIN=grafana-server
 ENV CP_SERVICE_PORT=3000
-ENV CP_DEPENDENCIES='[{"name": "influxdb"}, {"name": "amp-log-agent"} ]'
+ENV CP_DEPENDENCIES='[{"name": "influxdb"}, {"name": "amp-log-agent", "onChange": "ignore"} ]'
 
 CMD ["/start.sh"]
 
