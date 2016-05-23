@@ -1,12 +1,5 @@
-FROM alpine:3.3
+FROM appcelerator/alpine:3.3.1
 MAINTAINER Nicolas Degory <ndegory@axway.com>
-
-RUN apk update && \
-    apk --no-cache add python ca-certificates && \
-    apk --virtual envtpl-deps add --update py-pip python-dev curl && \
-    curl https://bootstrap.pypa.io/ez_setup.py | python && \
-    pip install envtpl && \
-    apk del envtpl-deps && rm -rf /var/cache/apk/*
 
 RUN apk --no-cache add nodejs
 
@@ -35,8 +28,6 @@ RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &
     mv ./conf /usr/share/grafana/conf && \
     apk del build-deps && cd / && rm -rf /var/cache/apk/* $GOPATH
 
-RUN apk --no-cache add curl bash
-
 VOLUME ["/var/lib/grafana", "/var/lib/grafana/plugins", "/var/log/grafana", "/etc/grafana"]
 
 EXPOSE 3000
@@ -52,24 +43,13 @@ ENV GRAFANA_PASS changeme
 COPY ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
 COPY ./run.sh /run.sh
 
-# Add ContainerPilot
-ENV CONTAINERPILOT=2.1.0
-RUN curl -Lo /tmp/cb.tar.gz https://github.com/joyent/containerpilot/releases/download/$CONTAINERPILOT/containerpilot-$CONTAINERPILOT.tar.gz \
-&& tar -xz -f /tmp/cb.tar.gz \
-&& mv ./containerpilot /bin/ \
-&& rm /tmp/cb.tar.gz
-
-COPY containerpilot.json /etc/containerpilot.json
-COPY ./start.sh /start.sh
-COPY ./stop.sh /stop.sh
-RUN chmod +x /*.sh
-
 #ENV CONSUL=consul:8500
-ENV CP_LOG_LEVEL=ERROR
 ENV CP_TTL=20
 ENV CP_POLL=5
-ENV CONTAINERPILOT=file:///etc/containerpilot.json
-ENV DEPENDENCIES="influxdb amp-log-agent"
+ENV CP_SERVICE_NAME=grafana
+ENV CP_SERVICE_BIN=grafana-server
+ENV CP_SERVICE_PORT=3000
+ENV CP_DEPENDENCIES='[{"name": "influxdb"}, {"name": "amp-log-agent"} ]'
 
 CMD ["/start.sh"]
 
