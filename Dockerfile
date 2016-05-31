@@ -28,7 +28,7 @@ RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &
     mv ./conf /usr/share/grafana/conf && \
     apk del build-deps && cd / && rm -rf /var/cache/apk/* $GOPATH
 
-VOLUME ["/var/lib/grafana", "/var/lib/grafana/plugins", "/var/log/grafana", "/etc/grafana"]
+VOLUME ["/var/lib/grafana", "/var/lib/grafana/plugins", "/var/log/grafana"]
 
 EXPOSE 3000
 
@@ -40,8 +40,8 @@ ENV INFLUXDB_PASS changeme
 ENV GRAFANA_USER admin
 ENV GRAFANA_PASS changeme
 
-COPY ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
-COPY ./run.sh /run.sh
+ADD ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
+ADD ./run.sh /run.sh
 
 #ENV CONSUL=consul:8500
 ENV CP_TTL=20

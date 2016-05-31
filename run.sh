@@ -1,9 +1,12 @@
 #!/bin/sh
 
 GRAFANA_BIN=/bin/grafana-server
+CONFIG_FILE="/usr/share/grafana/conf/defaults.ini"
+CONFIG_OVERRIDE_FILE="/etc/base-config/grafana/defaults.ini"
+CONFIG_EXTRA_DIR=/etc/extra-config/grafana
 
 should_configure=0
-for f in $(ls /etc/grafana/json/config-*.js); do
+for f in $(ls $CONFIG_EXTRA_DIR/config-*.js); do
     # look for jinja templates, and convert them
     grep -q "{{ " "$f"
     if [[ $? -eq 0 ]]; then
@@ -16,7 +19,12 @@ for f in $(ls /etc/grafana/json/config-*.js); do
     fi
     should_configure=1
 done
-envtpl /usr/share/grafana/conf/defaults.ini.tpl
+if [ -f "${CONFIG_OVERRIDE_FILE}" ]; then
+  echo "Override Grafana configuration file"
+  cp "${CONFIG_OVERRIDE_FILE}" "${CONFIG_FILE}"
+else
+  envtpl ${CONFIG_FILE}.tpl
+fi
 
 : "${GF_PATHS_DATA:=/var/lib/grafana}"
 : "${GF_PATHS_LOGS:=/var/log/grafana}"
