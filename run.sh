@@ -46,6 +46,12 @@ wait_for_start_of_grafana(){
     echo
 }
 
+if [[ ! -z $GRAFANA_BASE_URL ]]; then
+    urlPrefix="${GRAFANA_BASE_URL}/"
+else
+    urlPrefix=
+fi
+
 if [ $should_configure -eq 1 ]; then
     echo "Starting grafana for configuration"
     "$GRAFANA_BIN" \
@@ -62,14 +68,14 @@ if [ $should_configure -eq 1 ]; then
     echo "configure datasources..."
     for f in $(ls /etc/grafana/config-datasource*.js 2>/dev/null); do
         echo "datasource $f"
-        curl "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/api/datasources" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
+        curl -sS "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/${urlPrefix}api/datasources" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
     done
 
     echo
     echo "configure dashboards..."
     for f in $(ls /etc/grafana/config-dashboard*.js 2>/dev/null); do
         echo "dashboard $f"
-        curl "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/api/dashboards/db" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
+        curl -sS  "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/${urlPrefix}api/dashboards/db" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
     done
     touch /.ds_is_configured
     echo
