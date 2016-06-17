@@ -16,7 +16,18 @@ for f in $(ls /etc/grafana/json/config-*.js); do
     fi
     should_configure=1
 done
-envtpl /usr/share/grafana/conf/defaults.ini.tpl
+
+# Generating configuration file from template if needed
+if [[ -f /usr/share/grafana/conf/defaults.ini.tpl ]] ; then
+    echo "Generating /usr/share/grafana/conf/defaults.ini.tpl from template..."
+    envtpl /usr/share/grafana/conf/defaults.ini.tpl
+else
+    if [[ -f /usr/share/grafana/conf/defaults.ini ]] ; then
+        echo "/usr/share/grafana/conf/defaults.ini already exists. Nothing to do."
+    else
+        echo "ERROR: No template or configuration file found: /usr/share/grafana/conf/defaults.ini.tpl"
+    fi
+fi
 
 : "${GF_PATHS_DATA:=/var/lib/grafana}"
 : "${GF_PATHS_LOGS:=/var/log/grafana}"
