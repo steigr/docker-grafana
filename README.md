@@ -22,12 +22,16 @@ docker run \
   -d \
   -p 3000:3000 \
   --name=grafana \
-  -e "GRAFANA_PASS=changeme" \
   -e "INFLUXDB_HOST=influxdb" \
   -e "INFLUXDB_USER=grafana" \
   -e "INFLUXDB_PASS=changeme" \
+  -e "GRAFANA_USER=admin" \
+  -e "GRAFANA_PASS=changeme" \
+  -e "GRAFANA_BASE_URL=myUrlPrefix" \
   appcelerator/grafana
 ```
+
+- **GRAFANA_BASE_URL** allows to set `root_url` in `grafana.ini` like this `https://domain:port/<GRAFANA_BASE_URL>`. If not set, no prefix defined.
 
 ## Grafana container with persistent storage (recommended)
 

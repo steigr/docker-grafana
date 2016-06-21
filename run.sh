@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 GRAFANA_BIN=/bin/grafana-server
 
 should_configure=0
-for f in $(ls /etc/grafana/json/config-*.js); do
+for f in /etc/grafana/json/config-*.js; do
     # look for jinja templates, and convert them
     grep -q "{{ " "$f"
     if [[ $? -eq 0 ]]; then
@@ -16,7 +16,18 @@ for f in $(ls /etc/grafana/json/config-*.js); do
     fi
     should_configure=1
 done
-envtpl /usr/share/grafana/conf/defaults.ini.tpl
+
+# Generating configuration file from template if needed
+if [[ -f /usr/share/grafana/conf/defaults.ini.tpl ]] ; then
+    echo "Generating /usr/share/grafana/conf/defaults.ini.tpl from template..."
+    envtpl /usr/share/grafana/conf/defaults.ini.tpl
+else
+    if [[ -f /usr/share/grafana/conf/defaults.ini ]] ; then
+        echo "/usr/share/grafana/conf/defaults.ini already exists. Nothing to do."
+    else
+        echo "ERROR: No template or configuration file found: /usr/share/grafana/conf/defaults.ini.tpl"
+    fi
+fi
 
 : "${GF_PATHS_DATA:=/var/lib/grafana}"
 : "${GF_PATHS_LOGS:=/var/log/grafana}"
@@ -46,6 +57,12 @@ wait_for_start_of_grafana(){
     echo
 }
 
+if [[ ! -z $GRAFANA_BASE_URL ]]; then
+    urlPrefix="${GRAFANA_BASE_URL}/"
+else
+    urlPrefix=
+fi
+
 if [ $should_configure -eq 1 ]; then
     echo "Starting grafana for configuration"
     "$GRAFANA_BIN" \
@@ -60,16 +77,16 @@ if [ $should_configure -eq 1 ]; then
     wait_for_start_of_grafana
 
     echo "configure datasources..."
-    for f in $(ls /etc/grafana/config-datasource*.js 2>/dev/null); do
+    for f in /etc/grafana/config-datasource*.js; do
         echo "datasource $f"
-        curl "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/api/datasources" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
+        curl -sS "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/${urlPrefix}api/datasources" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
     done
 
     echo
     echo "configure dashboards..."
-    for f in $(ls /etc/grafana/config-dashboard*.js 2>/dev/null); do
+    for f in /etc/grafana/config-dashboard*.js; do
         echo "dashboard $f"
-        curl "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/api/dashboards/db" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
+        curl -sS  "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/${urlPrefix}api/dashboards/db" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
     done
     touch /.ds_is_configured
     echo
