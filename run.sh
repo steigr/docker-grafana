@@ -6,7 +6,7 @@ CONFIG_OVERRIDE_FILE="/etc/base-config/grafana/defaults.ini"
 CONFIG_EXTRA_DIR=/etc/extra-config/grafana
 
 should_configure=0
-for f in $(ls $CONFIG_EXTRA_DIR/config-*.js); do
+for f in $CONFIG_EXTRA_DIR/config-*.js; do
     # look for jinja templates, and convert them
     grep -q "{{ " "$f"
     if [[ $? -eq 0 ]]; then
@@ -73,14 +73,14 @@ if [ $should_configure -eq 1 ]; then
     wait_for_start_of_grafana
 
     echo "configure datasources..."
-    for f in $(ls /etc/grafana/config-datasource*.js 2>/dev/null); do
+    for f in /etc/grafana/config-datasource*.js 2>/dev/null; do
         echo "datasource $f"
         curl "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/api/datasources" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
     done
 
     echo
     echo "configure dashboards..."
-    for f in $(ls /etc/grafana/config-dashboard*.js 2>/dev/null); do
+    for f in /etc/grafana/config-dashboard*.js 2>/dev/null; do
         echo "dashboard $f"
         curl "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/api/dashboards/db" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
     done
