@@ -40,8 +40,8 @@ ENV INFLUXDB_PASS changeme
 ENV GRAFANA_USER admin
 ENV GRAFANA_PASS changeme
 
-ADD ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
-ADD ./run.sh /run.sh
+COPY ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
+COPY ./run.sh /run.sh
 
 #ENV CONSUL=consul:8500
 ENV CP_TTL=20
