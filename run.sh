@@ -23,7 +23,12 @@ if [ -f "${CONFIG_OVERRIDE_FILE}" ]; then
   echo "Override Grafana configuration file"
   cp "${CONFIG_OVERRIDE_FILE}" "${CONFIG_FILE}"
 else
-  envtpl ${CONFIG_FILE}.tpl
+  if [[ -f ${CONFIG_FILE}.tpl ]]; then
+    envtpl ${CONFIG_FILE}.tpl
+  elif [[ ! -f ${CONFIG_FILE} ]]; then
+    echo "ERROR: no configuration file ${CONFIG_FILE} or ${CONFIG_FILE}.tpl"
+    exit 1
+  fi
 fi
 
 : "${GF_PATHS_DATA:=/var/lib/grafana}"
