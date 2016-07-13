@@ -17,10 +17,10 @@ RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &
     go run build.go setup && \
     $GOPATH/bin/godep restore && \
     go run build.go build && \
-    npm install && \
-    npm run build && \
     npm install -g grunt-cli && \
-    grunt && \
+    npm install && \
+    npm run build --force && \
+    grunt --force && \
     npm uninstall -g grunt-cli && \
     npm cache clear && \
     mv ./bin/grafana-server /bin/ && \
