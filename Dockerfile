@@ -28,7 +28,7 @@ RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &
     mv ./conf /usr/share/grafana/conf && \
     apk del build-deps && cd / && rm -rf /var/cache/apk/* $GOPATH
 
-VOLUME ["/var/lib/grafana", "/var/lib/grafana/plugins", "/var/log/grafana", "/etc/grafana"]
+VOLUME ["/var/lib/grafana", "/var/lib/grafana/plugins", "/var/log/grafana"]
 
 EXPOSE 3000
 

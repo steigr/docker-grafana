@@ -1,9 +1,12 @@
 #!/bin/bash
 
 GRAFANA_BIN=/bin/grafana-server
+CONFIG_FILE="/usr/share/grafana/conf/defaults.ini"
+CONFIG_OVERRIDE_FILE="/etc/base-config/grafana/defaults.ini"
+CONFIG_EXTRA_DIR=/etc/extra-config/grafana
 
 should_configure=0
-for f in $(ls /etc/grafana/json/config-*.js); do
+for f in $CONFIG_EXTRA_DIR/config-*.js; do
     # look for jinja templates, and convert them
     grep -q "{{ " "$f"
     if [[ $? -eq 0 ]]; then
@@ -16,8 +19,17 @@ for f in $(ls /etc/grafana/json/config-*.js); do
     fi
     should_configure=1
 done
-
-envtpl /usr/share/grafana/conf/defaults.ini.tpl
+if [ -f "${CONFIG_OVERRIDE_FILE}" ]; then
+  echo "Override Grafana configuration file"
+  cp "${CONFIG_OVERRIDE_FILE}" "${CONFIG_FILE}"
+else
+  if [[ -f ${CONFIG_FILE}.tpl ]]; then
+    envtpl ${CONFIG_FILE}.tpl
+  elif [[ ! -f ${CONFIG_FILE} ]]; then
+    echo "ERROR: no configuration file ${CONFIG_FILE} or ${CONFIG_FILE}.tpl"
+    exit 1
+  fi
+fi
 
 : "${GF_PATHS_DATA:=/var/lib/grafana}"
 : "${GF_PATHS_LOGS:=/var/log/grafana}"
@@ -67,14 +79,14 @@ if [ $should_configure -eq 1 ]; then
     wait_for_start_of_grafana
 
     echo "configure datasources..."
-    for f in $(ls /etc/grafana/config-datasource*.js); do
+    for f in /etc/grafana/config-datasource*.js; do
         echo "datasource $f"
         curl -sS "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/${urlPrefix}api/datasources" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
     done
 
     echo
     echo "configure dashboards..."
-    for f in $(ls /etc/grafana/config-dashboard*.js); do
+    for f in /etc/grafana/config-dashboard*.js; do
         echo "dashboard $f"
         curl -sS  "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/${urlPrefix}api/dashboards/db" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
     done
