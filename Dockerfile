@@ -3,7 +3,7 @@ MAINTAINER Nicolas Degory <ndegory@axway.com>
 
 RUN apk --no-cache add nodejs
 
-ENV GRAFANA_VERSION 3.0.2
+ENV GRAFANA_VERSION 3.0.4
 
 RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     echo "http://nl.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
@@ -39,6 +39,7 @@ ENV INFLUXDB_USER grafana
 ENV INFLUXDB_PASS changeme
 ENV GRAFANA_USER admin
 ENV GRAFANA_PASS changeme
+#ENV GRAFANA_BASE_URL
 
 COPY ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
 COPY ./run.sh /run.sh
