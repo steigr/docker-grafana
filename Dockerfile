@@ -51,7 +51,7 @@ ENV AMPPILOT_REGISTEREDPORT=3000
 ENV DEPENDENCIES="influxdb, amp-log-agent"
 ENV AMPPILOT_AMPLOGAGENT_ONLYATSTARTUP=true
 
-CMD ["/run.sh"]
+ENTRYPOINT ["/amp-pilot"]
 
 LABEL axway_image=grafana
 # will be updated whenever there's a new commit
