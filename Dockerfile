@@ -8,7 +8,8 @@ ENV GRAFANA_VERSION 3.0.4
 RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     echo "http://nl.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     apk update && apk upgrade && \
-    apk --virtual build-deps add build-base go curl git gcc musl-dev make nodejs-dev && \
+    apk --no-cache add fontconfig && \
+    apk --virtual build-deps add build-base go curl git gcc musl-dev make nodejs-dev fontconfig-dev && \
     export GOPATH=/go && \
     mkdir -p $GOPATH/src/github.com/grafana && cd $GOPATH/src/github.com/grafana && \
     git clone https://github.com/grafana/grafana.git -b v${GRAFANA_VERSION} &&\
