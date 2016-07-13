@@ -45,15 +45,13 @@ ENV GRAFANA_PASS changeme
 COPY ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
 COPY ./run.sh /run.sh
 
-#ENV CONSUL=consul:8500
-ENV CP_TTL=20
-ENV CP_POLL=5
-ENV CP_SERVICE_NAME=grafana
-ENV CP_SERVICE_BIN=grafana-server
-ENV CP_SERVICE_PORT=3000
-ENV CP_DEPENDENCIES='[{"name": "influxdb"}, {"name": "amp-log-agent", "onChange": "ignore"} ]'
+ENV SERVICE_NAME=grafana
+ENV AMPPILOT_LAUNCH_CMD=/run.sh
+ENV AMPPILOT_REGISTEREDPORT=3000
+ENV DEPENDENCIES="influxdb, amp-log-agent"
+ENV AMPPILOT_AMPLOGAGENT_ONLYATSTARTUP=true
 
-CMD ["/start.sh"]
+CMD ["/run.sh"]
 
 LABEL axway_image=grafana
 # will be updated whenever there's a new commit
