@@ -114,7 +114,7 @@ CMDARGS="--homepath=/usr/share/grafana        \
   cfg:default.paths.logs=$GF_PATHS_LOGS       \
   cfg:default.paths.plugins=$GF_PATHS_PLUGINS \
   web"
-export AMP_LAUNCH_CMD="$CMD $CMDARGS"
+export AMPPILOT_LAUNCH_CMD="$CMD $CMDARGS"
 if [[ -n "$CONSUL" && -n "$PILOT" ]]; then
     echo "registering in Consul with $PILOT"
     exec "$PILOT" "$CMD" $CMDARGS
