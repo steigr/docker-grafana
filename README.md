@@ -28,6 +28,7 @@ docker run \
   -e "GRAFANA_USER=admin" \
   -e "GRAFANA_PASS=changeme" \
   -e "GRAFANA_BASE_URL=myUrlPrefix" \
+  -e "FORCE_HOSTNAME=auto" \
   appcelerator/grafana
 ```
 
@@ -67,8 +68,7 @@ You can find samples in the github repository, to mount your own, put your confi
 
 ```docker run -v $config:/etc/extra-config/grafana:ro ...```
 
-amp pilot
----------------
+# amp pilot
 
 To enable amp-pilot, specify the Consul URL:
 
