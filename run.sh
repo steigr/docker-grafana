@@ -6,6 +6,16 @@ CONFIG_OVERRIDE_FILE="/etc/base-config/grafana/defaults.ini"
 CONFIG_EXTRA_DIR=/etc/extra-config/grafana
 PILOT="/bin/amp-pilot"
 
+if [ -n "${FORCE_HOSTNAME}" ]; then
+    if [ "${FORCE_HOSTNAME}" = "auto" ]; then
+        #set hostname with IPv4 eth0
+        HOSTIPNAME=$(ip a show dev eth0 | grep inet | grep eth0 | sed -e 's/^.*inet.//g' -e 's/\/.*$//g')
+        HOSTNAME="$HOSTIPNAME"
+    else
+        HOSTNAME="$FORCE_HOSTNAME"
+    fi
+    export HOSTNAME
+fi
 should_configure=0
 for f in $CONFIG_EXTRA_DIR/config-*.js; do
     # look for jinja templates, and convert them
@@ -117,7 +127,7 @@ CMDARGS="--homepath=/usr/share/grafana        \
 export AMPPILOT_LAUNCH_CMD="$CMD $CMDARGS"
 if [[ -n "$CONSUL" && -n "$PILOT" ]]; then
     echo "registering in Consul with $PILOT"
-    exec "$PILOT" "$CMD" $CMDARGS
+    exec "$PILOT"
 else
     echo "not registering in Consul"
     exec "$CMD" $CMDARGS

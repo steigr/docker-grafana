@@ -28,6 +28,7 @@ docker run \
   -e "GRAFANA_USER=admin" \
   -e "GRAFANA_PASS=changeme" \
   -e "GRAFANA_BASE_URL=myUrlPrefix" \
+  -e "FORCE_HOSTNAME=auto" \
   appcelerator/grafana
 ```
 
@@ -51,25 +52,24 @@ docker run \
 ## Running specific version of Grafana
 
 ```
-# specify right tag, e.g. 3.0.2 - see Docker Hub for available tags
+# specify right tag, e.g. 3.0.4 - see Docker Hub for available tags
 docker run \
   -d \
   -p 3000:3000 \
   --name grafana \
-  appcelerator/grafana:3.0.2
+  appcelerator/grafana:3.0.4
 ```
 
 # Dashboard and datasources
 
-mount dashboards in /etc/grafana/json/config-dashboard*.js and datasources in /etc/grafana/json/config-datasource*.js, they will be loaded at container start.
+mount dashboards in /etc/extra-config/grafana/config-dashboard*.js and datasources in /etc/extra-config/grafana/config-datasource*.js, they will be loaded at container start.
 
 You can find samples in the github repository, to mount your own, put your config-*.js file in a $config folder and:
 
-```docker run -v $config:/etc/grafana/json:ro ...```
+```docker run -v $config:/etc/extra-config/grafana:ro ...```
 
-Container pilot
----------------
+# amp pilot
 
-To enable container pilot, specify the Consul URL:
+To enable amp-pilot, specify the Consul URL:
 
 ```docker run -e CONSUL=consul:8500 ...```

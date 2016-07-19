@@ -3,11 +3,9 @@ MAINTAINER Nicolas Degory <ndegory@axway.com>
 
 RUN apk --no-cache add nodejs
 
-ENV GRAFANA_VERSION 3.0.4
+ENV GRAFANA_VERSION 3.1.0
 
-RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
-    echo "http://nl.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    apk update && apk upgrade && \
+RUN apk update && apk upgrade && \
     apk --no-cache add fontconfig && \
     apk --virtual build-deps add build-base go curl git gcc musl-dev make nodejs-dev fontconfig-dev && \
     export GOPATH=/go && \
@@ -19,8 +17,8 @@ RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &
     go run build.go build && \
     npm install -g grunt-cli && \
     npm install && \
-    npm run build --force && \
-    grunt --force && \
+    npm run build && \
+    grunt && \
     npm uninstall -g grunt-cli && \
     npm cache clear && \
     mv ./bin/grafana-server /bin/ && \
