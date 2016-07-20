@@ -68,6 +68,16 @@ You can find samples in the github repository, to mount your own, put your confi
 
 ```docker run -v $config:/etc/extra-config/grafana:ro ...```
 
+An other way to load default configuration is to download a tarball archive from a public site. Use the CONFIG_ARCHIVE_URL for that:
+
+```
+docker run -d -e CONFIG_ARCHIVE_URL=https://download.example.com/config/grafana.tgz ... appcelerator/grafana:latest
+```
+
+The archive should contain under a top directory one or both directory:
+- base-config/grafana
+- extra-config/grafana
+
 # amp pilot
 
 To enable amp-pilot, specify the Consul URL:

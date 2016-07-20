@@ -16,6 +16,24 @@ if [ -n "${FORCE_HOSTNAME}" ]; then
     fi
     export HOSTNAME
 fi
+
+if [[ -n "$CONFIG_ARCHIVE_URL" ]]; then
+  echo "INFO - Download configuration archive file $CONFIG_ARCHIVE_URL..."
+  curl -L "$CONFIG_ARCHIVE_URL" -o /tmp/config.tgz
+  if [[ $? -eq 0 ]]; then
+    tmpd=$(mktemp -d)
+    gunzip -c /tmp/config.tgz | tar xf - -C $tmpd
+    echo "INFO - Overriding configuration file:"
+    find $tmpd/*/base-config/grafana 2>/dev/null
+    echo "INFO - Extra configuration file:"
+    find $tmpd/*/extra-config/grafana 2>/dev/null
+    mv $tmpd/*/extra-config $tmpd/*/base-config /etc/ 2>/dev/null
+    rm -rf /tmp/config.tgz "$tmpd"
+  else
+    echo "WARN - download failed, ignore"
+  fi
+fi
+
 should_configure=0
 for f in $CONFIG_EXTRA_DIR/config-*.js; do
     # look for jinja templates, and convert them
