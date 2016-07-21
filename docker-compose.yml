@@ -45,7 +45,10 @@ services:
       - "ServiceUUId=system.influxdb"
 
   grafana:
-    image: appcelerator/grafana:latest
+    image: local/grafana
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
      - "6001:3000"
     environment:
