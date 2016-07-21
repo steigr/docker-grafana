@@ -1,0 +1,18 @@
+version: '2'
+services:
+  consul:
+    extends:
+      file: docker-compose.yml
+      service: consul
+  influxdb:
+    extends:
+      file: docker-compose.yml
+      service: influxdb
+    depends_on:
+      - consul
+  grafana:
+    extends:
+      file: docker-compose.yml
+      service: grafana
+    depends_on:
+      - influxdb

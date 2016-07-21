@@ -16,8 +16,27 @@ if [ -n "${FORCE_HOSTNAME}" ]; then
     fi
     export HOSTNAME
 fi
+
+if [[ -n "$CONFIG_ARCHIVE_URL" ]]; then
+  echo "INFO - Download configuration archive file $CONFIG_ARCHIVE_URL..."
+  curl -L "$CONFIG_ARCHIVE_URL" -o /tmp/config.tgz
+  if [[ $? -eq 0 ]]; then
+    tmpd=$(mktemp -d)
+    gunzip -c /tmp/config.tgz | tar xf - -C $tmpd
+    echo "INFO - Overriding configuration file:"
+    find $tmpd/*/base-config/grafana 2>/dev/null
+    echo "INFO - Extra configuration file:"
+    find $tmpd/*/extra-config/grafana 2>/dev/null
+    mv $tmpd/*/extra-config $tmpd/*/base-config /etc/ 2>/dev/null
+    rm -rf /tmp/config.tgz "$tmpd"
+  else
+    echo "WARN - download failed, ignore"
+  fi
+fi
+
 should_configure=0
 for f in $CONFIG_EXTRA_DIR/config-*.js; do
+    echo "$f" | grep -q '*' && break
     # look for jinja templates, and convert them
     grep -q "{{ " "$f"
     if [[ $? -eq 0 ]]; then
@@ -30,6 +49,7 @@ for f in $CONFIG_EXTRA_DIR/config-*.js; do
           exit 1
         fi
     else
+        echo "copying $f"
         cp "$f" /etc/grafana/
     fi
     should_configure=1
@@ -78,7 +98,7 @@ wait_for_start_of_grafana(){
     echo
 }
 
-if [[ ! -z $GRAFANA_BASE_URL ]]; then
+if [[ -n $GRAFANA_BASE_URL ]]; then
     urlPrefix="${GRAFANA_BASE_URL}/"
 else
     urlPrefix=
@@ -99,6 +119,7 @@ if [[ $should_configure -eq 1 ]]; then
 
     echo "configure datasources..."
     for f in /etc/grafana/config-datasource*.js; do
+        echo "$f" | grep -q '*' && break
         echo "datasource $f"
         curl -sS "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/${urlPrefix}api/datasources" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
     done
@@ -106,6 +127,7 @@ if [[ $should_configure -eq 1 ]]; then
     echo
     echo "configure dashboards..."
     for f in /etc/grafana/config-dashboard*.js; do
+        echo "$f" | grep -q '*' && break
         echo "dashboard $f"
         curl -sS  "http://$GRAFANA_USER:$GRAFANA_PASS@127.0.0.1:3001/${urlPrefix}api/dashboards/db" -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary "@$f"
     done
