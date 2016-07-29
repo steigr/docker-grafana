@@ -1,4 +1,4 @@
-FROM appcelerator/amp:latest
+FROM appcelerator/alpine:20160726
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
 RUN apk --no-cache add nodejs
