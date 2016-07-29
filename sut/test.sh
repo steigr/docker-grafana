@@ -14,23 +14,22 @@ if [[ $? -ne 0 ]]; then
 fi
 printf "%-16s[OK]\n" "resolves"
 
-echo -n "test grafana login page... "
+echo -n "test grafana api...        "
 i=0
-r=1
-while [[ $r -ne 0 ]]; do
+r=0
+while [[ $r -lt 1 ]]; do
   ((i++))
   sleep 1
-  curl -L $GRAFANA_HOST:3000 2>/dev/null | grep -q '<title>Grafana</title>'
-  r=$?
+  r=$(curl -u $GRAFANA_USER:$GRAFANA_PASS $GRAFANA_HOST:3000/api/admin/stats 2>/dev/null | jq -r '.user_count')
   if [[ $i -gt 40 ]]; then break; fi
 done
-if [[ $r -ne 0 ]]; then
+if [[ $r -lt 1 ]]; then
   echo
   echo "failed"
-  curl -L $GRAFANA_HOST:3000
+  curl -u $GRAFANA_USER:$GRAFANA_PASS $GRAFANA_HOST:3000/api/admin/stats 2>/dev/null
   exit 1
 fi
-printf "%-16s[OK]\n" "ready (${i}s)"
+printf "%-16s[OK]\n" " (${i}s)"
 
 echo -n "test grafana auth...       "
 org=$(curl -u $GRAFANA_USER:$GRAFANA_PASS $GRAFANA_HOST:3000/api/org 2>/dev/null | jq -r '.name')
