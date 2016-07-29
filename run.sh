@@ -4,7 +4,7 @@ GRAFANA_BIN=/bin/grafana-server
 CONFIG_FILE="/usr/share/grafana/conf/defaults.ini"
 CONFIG_OVERRIDE_FILE="/etc/base-config/grafana/defaults.ini"
 CONFIG_EXTRA_DIR=/etc/extra-config/grafana
-PILOT="/bin/amp-pilot"
+PILOT="/bin/amppilot/amp-pilot.alpine"
 
 if [ -n "${FORCE_HOSTNAME}" ]; then
     if [ "${FORCE_HOSTNAME}" = "auto" ]; then
@@ -146,9 +146,21 @@ CMDARGS="--homepath=/usr/share/grafana        \
   cfg:default.paths.logs=$GF_PATHS_LOGS       \
   cfg:default.paths.plugins=$GF_PATHS_PLUGINS \
   web"
-export AMPPILOT_LAUNCH_CMD="$CMD $CMDARGS"
-if [[ -n "$CONSUL" && -n "$PILOT" ]]; then
+if [[ -n "$CONSUL" ]]; then
+    i=0
+    while [[ ! -x "$PILOT" ]]; do
+        echo "WARNING - amp-pilot is not yet available, try again..."
+        sleep 1
+        ((i++))
+        if [[ $i -ge 20 ]]; then
+            echo "ERROR - can't find amp-pilot, abort"
+            exit 1
+        fi
+    done
+fi
+if [[ -n "$CONSUL" && -x "$PILOT" ]]; then
     echo "registering in Consul with $PILOT"
+    export AMPPILOT_LAUNCH_CMD="$CMD $CMDARGS"
     exec "$PILOT"
 else
     echo "not registering in Consul"
