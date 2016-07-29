@@ -60,7 +60,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-     - "6001:3000"
+     - "3000:3000"
     volumes:
       - /bin/amppilot:/bin/amppilot:ro
     environment:
