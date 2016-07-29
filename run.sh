@@ -88,12 +88,12 @@ wait_for_start_of_grafana(){
     echo "waiting for availability of grafana..."
     while ! curl ${API_URL} 2>/dev/null; do
         retry=$((retry+1))
-        if [[ $retry -gt 15 ]]; then
+        if [[ $retry -gt 60 ]]; then
             echo "\nERROR: unable to start grafana"
             exit 1
         fi
         echo -n "."
-        sleep 1
+        sleep 0.2
     done
     echo
 }
@@ -114,6 +114,8 @@ if [[ $should_configure -eq 1 ]]; then
       cfg:default.paths.logs="$GF_PATHS_LOGS"   \
       cfg:default.paths.plugins="$GF_PATHS_PLUGINS" \
       web &
+    sleep 0.2
+    echo "Checking that grafana is up..."
     ps auwx | grep -q $GRAFANA_BIN || exit 1
     wait_for_start_of_grafana
 
