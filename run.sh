@@ -163,6 +163,9 @@ fi
 if [[ -n "$CONSUL" && -x "$PILOT" ]]; then
     echo "registering in Consul with $PILOT"
     export AMPPILOT_LAUNCH_CMD="$CMD $CMDARGS"
+    export SERVICE_NAME=${SERVICE_NAME:-grafana}
+    export AMPPILOT_REGISTEREDPORT=${AMPPILOT_REGISTEREDPORT:-3000}
+    export DEPENDENCIES=${DEPENDENCIES:-influxdb}
     exec "$PILOT"
 else
     echo "not registering in Consul"

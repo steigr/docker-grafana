@@ -4,21 +4,27 @@ services:
     extends:
       file: docker-compose.yml
       service: consul
+  pilot:
+    extends:
+      file: docker-compose.yml
+      service: pilot
   influxdb:
     extends:
       file: docker-compose.yml
       service: influxdb
-    depends_on:
-      - consul
   grafana:
     extends:
       file: docker-compose.yml
       service: grafana
-    depends_on:
-      - consul
-      - influxdb
   sut:
     image: appcelerator/sut
     build: ./sut
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       - grafana
+      - pilot
+      - consul
+      - influxdb
+    labels:
+      - "io.appcelerator.amp.build.mounts=/bin/amppilot,/var/run/docker.sock"
