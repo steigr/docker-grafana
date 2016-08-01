@@ -5,14 +5,22 @@ GRAFANA_USER=admin
 GRAFANA_PASS=changeme
 
 echo -n "test grafana presence...   "
-nslookup grafana >/dev/null 2>&1
-if [[ $? -ne 0 ]]; then
+i=0
+r=1
+while [[ $r -ne 0 ]]; do
+  nslookup grafana >/dev/null 2>&1
+  r=$?
+  if [[ $i -gt 40 ]]; then break; fi
+  ((i++))
+  sleep 1
+done
+if [[ $r -ne 0 ]]; then
   echo
   echo "failed"
   nslookup grafana
   exit 1
 fi
-printf "%-16s[OK]\n" "resolves"
+printf "%-16s[OK]\n" "resolves(${i}s)"
 
 echo -n "test grafana api...        "
 i=0
@@ -26,7 +34,7 @@ done
 if [[ $r -lt 1 ]]; then
   echo
   echo "failed"
-  curl -u $GRAFANA_USER:$GRAFANA_PASS $GRAFANA_HOST:3000/api/admin/stats 2>/dev/null
+  curl -u $GRAFANA_USER:$GRAFANA_PASS $GRAFANA_HOST:3000/api/admin/stats
   exit 1
 fi
 printf "%-16s[OK]\n" " (${i}s)"

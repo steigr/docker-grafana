@@ -8,26 +8,19 @@ services:
     extends:
       file: docker-compose.yml
       service: pilot
-    depends_on:
-      - consul
   influxdb:
     extends:
       file: docker-compose.yml
       service: influxdb
-    depends_on:
-      - consul
-      - pilot
   grafana:
     extends:
       file: docker-compose.yml
       service: grafana
-    depends_on:
-      - consul
-      - pilot
-      - influxdb
   sut:
     image: appcelerator/sut
     build: ./sut
     depends_on:
       - grafana
       - pilot
+      - consul
+      - influxdb
