@@ -43,12 +43,6 @@ ENV GRAFANA_PASS changeme
 COPY ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
 COPY ./run.sh /run.sh
 
-ENV SERVICE_NAME=grafana
-ENV AMPPILOT_LAUNCH_CMD=/bin/grafana-server
-ENV AMPPILOT_REGISTEREDPORT=3000
-ENV DEPENDENCIES="influxdb, amp-log-agent"
-ENV AMPPILOT_AMPLOGAGENT_ONLYATSTARTUP=true
-
 ENTRYPOINT ["/bin/sh", "-c"]
 CMD ["/run.sh"]
 
