@@ -35,9 +35,12 @@ if [[ $r -lt 1 ]]; then
   echo
   echo "failed"
   curl -u $GRAFANA_USER:$GRAFANA_PASS $GRAFANA_HOST:3000/api/admin/stats
-  c=$(docker ps | grep /grafana | awk '{print $1}')
-  echo "logs from $c:"
-  docker logs $c
+  ci=$(docker ps | grep /influxdb | awk '{print $1}')
+  echo "logs from influxdb $ci:"
+  docker logs $ci
+  cg=$(docker ps | grep /grafana | awk '{print $1}')
+  echo "logs from grafana $cg:"
+  docker logs $cg
   exit 1
 fi
 printf "%-16s[OK]\n" " (${i}s)"
