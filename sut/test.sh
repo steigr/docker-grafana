@@ -2,7 +2,7 @@
 
 GRAFANA_HOST=${GRAFANA_HOST:-grafana}
 GRAFANA_USER=admin
-GRAFANA_PASS=changeme
+GRAFANA_PASS=AxwayPassword*
 
 echo -n "test grafana presence...   "
 i=0

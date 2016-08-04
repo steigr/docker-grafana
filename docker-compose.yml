@@ -71,6 +71,8 @@ services:
       INFLUXDB_PASS: changeme
       DEPENDENCIES: "influxdb"
       AMPPILOT_KAFKA: ""
+      GRAFANA_USER: admin
+      GRAFANA_PASS: AxwayPassword*
     labels:
       - "ServiceUUId=system.grafana"
       - "io.appcelerator.amp.build.mounts=/bin/amppilot"
