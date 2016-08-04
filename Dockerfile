@@ -3,7 +3,7 @@ MAINTAINER Nicolas Degory <ndegory@axway.com>
 
 RUN apk --no-cache add nodejs
 
-ENV GRAFANA_VERSION 3.1.0
+ENV GRAFANA_VERSION 3.1.1
 
 RUN apk update && apk upgrade && \
     apk --no-cache add fontconfig && \
@@ -21,7 +21,7 @@ RUN apk update && apk upgrade && \
     grunt && \
     npm uninstall -g grunt-cli && \
     npm cache clear && \
-    mv ./bin/grafana-server /bin/ && \
+    mv ./bin/grafana-server ./bin/grafana-cli /bin/ && \
     mkdir -p /etc/grafana/json /var/lib/grafana/plugins /var/log/grafana /usr/share/grafana && \
     mv ./public_gen /usr/share/grafana/public && \
     mv ./conf /usr/share/grafana/conf && \
