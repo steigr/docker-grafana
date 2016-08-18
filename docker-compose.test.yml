@@ -1,13 +1,5 @@
 version: '2'
 services:
-  consul:
-    extends:
-      file: docker-compose.yml
-      service: consul
-  pilot:
-    extends:
-      file: docker-compose.yml
-      service: pilot
   influxdb:
     extends:
       file: docker-compose.yml
@@ -23,8 +15,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       - grafana
-      - pilot
-      - consul
       - influxdb
     labels:
-      - "io.appcelerator.amp.build.mounts=/bin/amppilot,/var/run/docker.sock"
+      - "io.appcelerator.amp.build.mounts=/var/run/docker.sock"

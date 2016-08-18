@@ -33,6 +33,7 @@ docker run \
 ```
 
 - **GRAFANA_BASE_URL** allows to set `root_url` in `grafana.ini` like this `https://domain:port/<GRAFANA_BASE_URL>`. If not set, no prefix defined.
+- **GRAFANA_PLUGIN_LIST** space separated list of plugins to install.
 
 ## Grafana container with persistent storage (recommended)
 
@@ -77,9 +78,3 @@ docker run -d -e CONFIG_ARCHIVE_URL=https://download.example.com/config/grafana.
 The archive should contain under a top directory one or both directory:
 - base-config/grafana
 - extra-config/grafana
-
-# amp pilot
-
-To enable amp-pilot, specify the Consul URL:
-
-```docker run -e CONSUL=consul:8500 ...```

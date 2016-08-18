@@ -1,10 +1,10 @@
 #!/bin/bash
 
 GRAFANA_BIN=/bin/grafana-server
+GRAFANA_CLI=/bin/grafana-cli
 CONFIG_FILE="/usr/share/grafana/conf/defaults.ini"
 CONFIG_OVERRIDE_FILE="/etc/base-config/grafana/defaults.ini"
 CONFIG_EXTRA_DIR=/etc/extra-config/grafana
-PILOT="/bin/amppilot/amp-pilot.alpine"
 
 if [ -n "${FORCE_HOSTNAME}" ]; then
     if [ "${FORCE_HOSTNAME}" = "auto" ]; then
@@ -142,32 +142,20 @@ else
 fi
 
 echo
+echo "Plugin installation..."
+if [[ -n "$GRAFANA_PLUGIN_LIST" ]]; then
+    for plugin in $GRAFANA_PLUGIN_LIST; do
+        echo "Installing $plugin"
+         $GRAFANA_CLI plugins install $plugin
+        echo "done ($?)"
+    done
+fi
+
+echo
 CMD="$GRAFANA_BIN"
 CMDARGS="--homepath=/usr/share/grafana        \
   cfg:default.paths.data=$GF_PATHS_DATA       \
   cfg:default.paths.logs=$GF_PATHS_LOGS       \
   cfg:default.paths.plugins=$GF_PATHS_PLUGINS \
   web"
-if [[ -n "$CONSUL" ]]; then
-    i=0
-    while [[ ! -x "$PILOT" ]]; do
-        echo "WARNING - amp-pilot is not yet available, try again..."
-        sleep 1
-        ((i++))
-        if [[ $i -ge 20 ]]; then
-            echo "ERROR - can't find amp-pilot, abort"
-            exit 1
-        fi
-    done
-fi
-if [[ -n "$CONSUL" && -x "$PILOT" ]]; then
-    echo "registering in Consul with $PILOT"
-    export AMPPILOT_LAUNCH_CMD="$CMD $CMDARGS"
-    export SERVICE_NAME=${SERVICE_NAME:-grafana}
-    export AMPPILOT_REGISTEREDPORT=${AMPPILOT_REGISTEREDPORT:-3000}
-    export DEPENDENCIES=${DEPENDENCIES:-influxdb}
-    exec "$PILOT"
-else
-    echo "not registering in Consul"
-    exec "$CMD" $CMDARGS
-fi
+exec "$CMD" $CMDARGS
