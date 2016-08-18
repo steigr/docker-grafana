@@ -33,6 +33,7 @@ docker run \
 ```
 
 - **GRAFANA_BASE_URL** allows to set `root_url` in `grafana.ini` like this `https://domain:port/<GRAFANA_BASE_URL>`. If not set, no prefix defined.
+- **GRAFANA_PLUGIN_LIST** space separated list of plugins to install.
 
 ## Grafana container with persistent storage (recommended)
 

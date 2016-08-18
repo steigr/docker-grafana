@@ -1,6 +1,7 @@
 #!/bin/bash
 
 GRAFANA_BIN=/bin/grafana-server
+GRAFANA_CLI=/bin/grafana-cli
 CONFIG_FILE="/usr/share/grafana/conf/defaults.ini"
 CONFIG_OVERRIDE_FILE="/etc/base-config/grafana/defaults.ini"
 CONFIG_EXTRA_DIR=/etc/extra-config/grafana
@@ -139,6 +140,16 @@ if [[ $should_configure -eq 1 ]]; then
     killall "$(basename $GRAFANA_BIN)"
 else
     echo "no datasource or dashboard json file, skip the configuration step"
+fi
+
+echo
+echo "Plugin installation..."
+if [[ -n "$GRAFANA_PLUGIN_LIST" ]]; then
+    for plugin in $GRAFANA_PLUGIN_LIST; do
+        echo "Installing $plugin"
+         $GRAFANA_CLI plugins install $plugin
+        echo "done ($?)"
+    done
 fi
 
 echo

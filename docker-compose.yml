@@ -66,6 +66,7 @@ services:
     environment:
       CONSUL: consul:8500
       CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.1.0.tar.gz"
+      GRAFANA_PLUGIN_LIST: "grafana-piechart-panel"
       FORCE_HOSTNAME: auto
       INFLUXDB_HOST: influxdb
       INFLUXDB_PASS: changeme
