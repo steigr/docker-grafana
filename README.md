@@ -78,9 +78,3 @@ docker run -d -e CONFIG_ARCHIVE_URL=https://download.example.com/config/grafana.
 The archive should contain under a top directory one or both directory:
 - base-config/grafana
 - extra-config/grafana
-
-# amp pilot
-
-To enable amp-pilot, specify the Consul URL:
-
-```docker run -e CONSUL=consul:8500 ...```
