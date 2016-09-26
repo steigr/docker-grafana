@@ -5,6 +5,8 @@ GRAFANA_CLI=/bin/grafana-cli
 CONFIG_FILE="/usr/share/grafana/conf/defaults.ini"
 CONFIG_OVERRIDE_FILE="/etc/base-config/grafana/defaults.ini"
 CONFIG_EXTRA_DIR=/etc/extra-config/grafana
+MAX_RETRIES=60
+SLEEPTIME=0.4
 
 if [ -n "${FORCE_HOSTNAME}" ]; then
     if [ "${FORCE_HOSTNAME}" = "auto" ]; then
@@ -88,12 +90,12 @@ wait_for_start_of_grafana(){
     echo "waiting for availability of grafana..."
     while ! curl ${API_URL} 2>/dev/null; do
         retry=$((retry+1))
-        if [[ $retry -gt 60 ]]; then
-            echo "\nERROR: unable to start grafana"
+        if [[ $retry -gt $MAX_RETRIES ]]; then
+            echo "ERROR: unable to start grafana after $MAX_RETRIES * $SLEEPTIME sec"
             exit 1
         fi
         echo -n "."
-        sleep 0.2
+        sleep $SLEEPTIME
     done
     echo
 }
