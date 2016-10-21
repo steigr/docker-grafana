@@ -49,7 +49,7 @@ COPY ./run.sh /run.sh
 ENTRYPOINT ["/bin/sh", "-c"]
 CMD ["/run.sh"]
 
-HEALTHCHECK --interval=5s --retries=5 --timeout=2s CMD curl -u $GRAFANA_USER:$GRAFANA_PASS localhost:3000/api/org 2>/dev/null | grep -q '"id":'
+HEALTHCHECK --interval=10s --retries=5 --timeout=2s CMD curl -u $GRAFANA_USER:$GRAFANA_PASS localhost:3000/api/org 2>/dev/null | grep -q '"id":'
 
 LABEL axway_image=grafana
 # will be updated whenever there's a new commit

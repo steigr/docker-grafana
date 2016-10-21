@@ -5,7 +5,7 @@ GRAFANA_CLI=/bin/grafana-cli
 CONFIG_FILE="/usr/share/grafana/conf/defaults.ini"
 CONFIG_OVERRIDE_FILE="/etc/base-config/grafana/defaults.ini"
 CONFIG_EXTRA_DIR=/etc/extra-config/grafana
-MAX_RETRIES=60
+MAX_RETRIES=120
 SLEEPTIME=0.4
 
 if [ -n "${FORCE_HOSTNAME}" ]; then
@@ -97,7 +97,7 @@ wait_for_start_of_grafana(){
         echo -n "."
         sleep $SLEEPTIME
     done
-    echo
+    echo " ($retry * $SLEEPTIME)"
 }
 
 if [[ -n $GRAFANA_BASE_URL ]]; then
