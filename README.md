@@ -25,6 +25,8 @@ INFLUXDB_PASS | Grafana password in InfluxDB | changeme |
 GRAFANA_USER | Admin user | admin |
 GRAFANA_PASS | Admin password | changeme |
 GRAFANA_PLUGIN_LIST | Space separated list of plugins to install | | grafana-piechart-panel
+EXECUTE_ALERTS | Makes it possible to turn off alert rule execution | true | false
+DISABLE_LOGIN_FORM | Set to true to disable (hide) the login form, useful if you use OAuth | false | true
 
 ## Grafana container with persistent storage (recommended)
 
@@ -54,5 +56,6 @@ The archive should contain under a top directory at least one of these directori
 
 ## Tags
 
-- grafana-3.1, latest
+- ```grafana-3.1```, ```grafana-3.1.1-1```, ```latest```
+- ```grafana-4.0```
 
