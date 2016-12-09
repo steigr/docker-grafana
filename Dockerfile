@@ -3,7 +3,7 @@ MAINTAINER Nicolas Degory <ndegory@axway.com>
 
 RUN apk --no-cache add nodejs
 
-ENV GRAFANA_VERSION 4.0.0
+ENV GRAFANA_VERSION 4.0.2
 
 RUN apk update && apk upgrade && \
     apk --no-cache add fontconfig && \
