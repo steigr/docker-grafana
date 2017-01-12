@@ -45,7 +45,7 @@ for f in $CONFIG_EXTRA_DIR/config-*.js; do
         echo "converting $f"
         cfg=/etc/grafana/$(basename $f)
         cp "$f" "$cfg.tpl"
-        envtpl "$cfg.tpl"
+        envtpl -o "$cfg" "$cfg.tpl" && rm "$cfg.tpl"
         if [[ $? -ne 0 ]]; then
           echo "ERROR: unable to convert $cfg.tpl"
           exit 1
@@ -61,7 +61,7 @@ if [[ -f "${CONFIG_OVERRIDE_FILE}" ]]; then
   cp "${CONFIG_OVERRIDE_FILE}" "${CONFIG_FILE}"
 else
   if [[ -f ${CONFIG_FILE}.tpl ]]; then
-    envtpl ${CONFIG_FILE}.tpl
+    envtpl -o ${CONFIG_FILE} ${CONFIG_FILE}.tpl && rm ${CONFIG_FILE}.tpl
     if [[ $? -ne 0 ]]; then
       echo "ERROR: unable to convert $CONFIG_FILE.tpl"
       exit 1

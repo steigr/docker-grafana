@@ -56,6 +56,6 @@ The archive should contain under a top directory at least one of these directori
 
 ## Tags
 
-- ```grafana-3.1```, ```grafana-3.1.1-1```, ```latest```
+- ```grafana-3.1```, ```grafana-3.1.1-1```
 - ```grafana-4.0```, ```grafana-4.0.2```
-
+- ```grafana-4.1```, ```grafana-4.1.1```, ```latest```
