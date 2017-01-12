@@ -25,7 +25,7 @@ RUN apk update && apk upgrade && \
     mkdir -p /etc/grafana/json /var/lib/grafana/plugins /var/log/grafana /usr/share/grafana && \
     mv ./public_gen /usr/share/grafana/public && \
     mv ./conf /usr/share/grafana/conf && \
-    apk del build-deps && cd / && rm -rf /var/cache/apk/* $GOPATH
+    apk del build-deps && cd / && rm -rf /var/cache/apk/* /usr/local/share/.cache $GOPATH
 
 VOLUME ["/var/lib/grafana", "/var/lib/grafana/plugins", "/var/log/grafana"]
 
