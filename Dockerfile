@@ -86,7 +86,7 @@ COPY ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
 ARG   LABEL_NAME="${LABEL_NAME:-grafana}"
 ARG   LABEL_DESCRIPTION="${LABEL_DESCRIPTION:-Beautiful metric & analytic dashboards}"
 ARG   LABEL_BUILD_DATE="${LABEL_BUILD_DATE:-2017/3/1}"
-ARG   LABEL_VCS_REF="${LABEL_VCS_REF:-}"
+ARG   LABEL_VCS_REF="${LABEL_VCS_REF:-unknown}"
 ARG   LABEL_VCS_URL="${LABEL_VCS_URL:-https://github.com/steigr/docker-grafana}"
 ARG   LABEL_URL="${LABEL_URL:-https://grafana.org}"
 

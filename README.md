@@ -6,7 +6,7 @@ This project builds a Docker image with the latest master build of Grafana.
 
 Start your container binding the external port `3000`.
 
-    docker run -d --name=grafana -p 3000:3000 appcelerator/grafana
+    docker run -d --name=grafana -p 3000:3000 steigr/grafana
 
 Try it out, default admin user is admin/changeme.
 
@@ -36,7 +36,7 @@ DISABLE_LOGIN_FORM | Set to true to disable (hide) the login form, useful if you
       -p 3000:3000 \
       --name=grafana \
       --volumes-from grafana-storage \
-      appcelerator/grafana
+      steigr/grafana
 
 ## Dashboards and datasources
 
@@ -48,7 +48,7 @@ You can find samples in the github repository, to mount your own, put your confi
 
 An other way to load default configuration is to download a tarball archive from a public site. Use the CONFIG_ARCHIVE_URL for that:
 
-    docker run -d -e CONFIG_ARCHIVE_URL=https://download.example.com/config/grafana.tgz ... appcelerator/grafana:latest
+    docker run -d -e CONFIG_ARCHIVE_URL=https://download.example.com/config/grafana.tgz ... steigr/grafana:latest
 
 The archive should contain under a top directory at least one of these directories:
 - base-config/grafana
@@ -56,6 +56,12 @@ The archive should contain under a top directory at least one of these directori
 
 ## Tags
 
-- ```grafana-3.1```, ```grafana-3.1.1-1```
-- ```grafana-4.0```, ```grafana-4.0.2```
-- ```grafana-4.1```, ```grafana-4.1.1-1```, ```latest```
+- ```v4.1.1```
+- ```v4.1.2```
+- ```latest```
+
+## Docker Image
+
+[![](https://images.microbadger.com/badges/image/steigr/grafana.svg)](http://microbadger.com/images/steigr/grafana "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/steigr/grafana.svg)](http://microbadger.com/images/steigr/grafana "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/commit/steigr/grafana.svg)](http://microbadger.com/images/steigr/grafana "Get your own commit badge on microbadger.com")

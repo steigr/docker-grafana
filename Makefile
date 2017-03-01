@@ -6,9 +6,14 @@ all: image
 	@true
 
 image:
-	docker build --tag=$(IMAGE):$(VERSION) --build-arg=GRAFANA_VERSION=$(VERSION) .
+	@set -- docker build --tag=$(IMAGE):$(VERSION) \
+	  --build-arg=GRAFANA_VERSION=$(VERSION) \
+	  --build-arg=LABEL_BUILD_DATE=$$(date -u '+%FT%T.%UZ') \
+	  --build-arg=LABEL_VCS_REF=$$(git log --pretty=format:'%h' -n 1) \
+	  . \
+	&& set -x && exec "$$@"
 
-push:
+push: image
 	docker push $(IMAGE):$(VERSION)
 
 run: image
