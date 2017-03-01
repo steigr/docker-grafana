@@ -81,6 +81,9 @@ if [[ ! -x $GRAFANA_BIN ]]; then
   exit 1
 fi
 
+test -d "$GF_PATHS_DATA" || mkdir -p "$GF_PATHS_DATA"
+chown -R grafana:grafana "$GF_PATHS_DATA"
+
 # using port 3001 instead of 3000 for configuration sake,
 # the service won't be up until the real start
 API_URL="http://127.0.0.1:3001"
@@ -160,4 +163,4 @@ CMDARGS="--homepath=/usr/share/grafana        \
   cfg:default.paths.logs=$GF_PATHS_LOGS       \
   cfg:default.paths.plugins=$GF_PATHS_PLUGINS \
   web"
-exec "$CMD" $CMDARGS
+exec su-exec grafana "$CMD" $CMDARGS
