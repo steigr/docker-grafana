@@ -62,6 +62,8 @@ The archive should contain under a top directory at least one of these directori
 
 ## Docker Image
 
-[![](https://images.microbadger.com/badges/image/steigr/grafana.svg)](http://microbadger.com/images/steigr/grafana "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/steigr/grafana.svg)](http://microbadger.com/images/steigr/grafana "Get your own version badge on microbadger.com")
-[![](https://images.microbadger.com/badges/commit/steigr/grafana.svg)](http://microbadger.com/images/steigr/grafana "Get your own commit badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/steigr/grafana.svg)](http://microbadger.com/images/steigr/grafana)
+[![](https://images.microbadger.com/badges/version/steigr/grafana.svg)](http://microbadger.com/images/steigr/grafana)
+[![](https://images.microbadger.com/badges/commit/steigr/grafana.svg)](http://microbadger.com/images/steigr/grafana)
+[![DockerPulls](https://img.shields.io/docker/pulls/steigr/grafana.svg)](https://registry.hub.docker.com/u/steigr/grafana/)
+[![DockerAutomated](https://img.shields.io/docker/automated/steigr/grafana.svg)](https://registry.hub.docker.com/u/steigr/grafana/)
