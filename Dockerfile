@@ -20,7 +20,7 @@ RUN  curl -L https://github.com/subfuzion/envtpl/blob/master/envtpl?raw=true \
 
 RUN  apk --no-cache add --virtual .runtime-dep nodejs
 
-ARG  GRAFANA_VERSION=${GRAFANA_VERSION:-v4.1.1}
+ARG  GRAFANA_VERSION=${GRAFANA_VERSION:-v4.1.2}
 
 RUN  apk upgrade --no-cache \
  &&  apk --no-cache add --virtual .runtime-dep fontconfig \
